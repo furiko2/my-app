@@ -1,15 +1,14 @@
-import { AppProp as Props } from "../App";
+import { FC } from "react";
+import Table from "react-bootstrap/esm/Table";
+import { ContactInterface as Props } from "../App";
 
-
-
-export const ContactCard = (person : Props): JSX.Element => {
+export const ContactCard = ({ contact }: any) => {
   return (
-    <div key={person.id}>
-      <h2>
-        {person.firstName} {person.lastName}
-      </h2>
-      <p>{person.email}</p>
-      <p>{person.country}</p>
-    </div>
+    <tr key={contact.id}>
+      <td>{contact.firstName}</td>
+      <td>{contact.lastName}</td>
+      <td>{contact.email}</td>
+      <td>{contact.country}</td>
+    </tr>
   );
 };

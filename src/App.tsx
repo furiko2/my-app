@@ -1,16 +1,17 @@
 import React, { useState } from "react";
-import Button from "react-bootstrap/Button";
+
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 import { ContactList } from "./components/ContactList";
-import { ContactAdd } from "./components/ContactAdd";
+import { ContactAdd } from "./components/ContactForm";
 import { NavHeader } from "./components/NavHeader";
 
 import { Provider } from "react-redux";
+import Table from "react-bootstrap/esm/Table";
 
-export type AppProp = {
+export type ContactInterface = {
   id: number;
   firstName: String;
   lastName: String;
@@ -19,7 +20,7 @@ export type AppProp = {
 };
 
 function App() {
-  const initialState: AppProp[] = [
+  const initialState = [
     {
       id: 1,
       firstName: "john",
@@ -36,19 +37,31 @@ function App() {
     },
   ];
 
-  const [allContacts, setAllContacts] = useState<AppProp[]>(initialState);
+  const [allContacts, setAllContacts] = useState(initialState);
 
   const handleNewContact = () => {
     return;
   };
-
+  console.log(allContacts);
   return (
     <Router>
       <NavHeader />
 
       <Switch>
         <Route exact path="/">
-          <ContactList contact={allContacts} />
+          <Table striped bordered hover size="sm">
+            <thead>
+              <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Country</th>
+              </tr>
+            </thead>
+            <tbody>
+              <ContactList contacts={allContacts} />
+            </tbody>
+          </Table>
         </Route>
         <Route path="/addContact">
           <ContactAdd />

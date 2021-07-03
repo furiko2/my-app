@@ -1,11 +1,12 @@
 import React, { FC, ReactNode } from "react";
-import { AppProp as Props } from "../App";
+import { ReactElement } from "react";
+import { ContactInterface as Props } from "../App";
 import { ContactCard } from "./ContactCard";
 
-export const ContactList:FC<Props[]> = ({ contact }: Props[]): JSX.Element => {
+export const ContactList = ({ contacts }: any) => {
   const renderContactList = () => {
-    return contact.map((person: Props) => {
-       return <ContactCard key={person.id} person={person} />;
+    return contacts.map((contact: any) => {
+      return <ContactCard key={contact.id} contact={contact} />;
     });
   };
   return renderContactList();
