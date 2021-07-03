@@ -4,26 +4,39 @@ import Col from "react-bootstrap/esm/Col";
 import Dropdown from "react-bootstrap/esm/Dropdown";
 import Form from "react-bootstrap/esm/Form";
 import FormControl from "react-bootstrap/esm/FormControl";
-import InputGroup from "react-bootstrap/esm/InputGroup";
+
 import "../App.css";
+import { useAppSelector, useAppDispatch } from "../app/hooks";
+import { RootState } from "../app/store";
+import { createContact } from "../features/contact/contactSlice";
 
 interface Props {}
 const countryList = require("country-list");
 
 const allCountries = countryList.getNames();
 
-export const ContactAdd = (props: Props) => {
+export const ContactForm = (props: Props) => {
   const [contact, setContact] = useState({
     firstName: "john",
     lastName: "",
     email: "",
-    country: "",
+    country: "Country",
   });
+
+  const {firstName,lastName,email,country} = useAppSelector((state:RootState) => state.contactSlice);
+  
+  const dispatch = useAppDispatch();
 
   const handleChange = () => {
     return;
   };
-  console.log(contact);
+
+const handleCreate = ()=>{
+  
+  dispatch(createContact)
+
+}
+
   const getValidity = () => {
     return contact.firstName !== "john1";
   };
@@ -72,7 +85,7 @@ export const ContactAdd = (props: Props) => {
           </Col>
           <Col xs="auto">
             <Dropdown>
-              <Dropdown.Toggle variant="info" id="dropdown-basic">
+              <Dropdown.Toggle variant="info" id="dropdown-basic" >
                 {contact.country}
               </Dropdown.Toggle>
 
@@ -97,7 +110,11 @@ export const ContactAdd = (props: Props) => {
         </Form.Row>
         <Form.Row>
           <Col xs="auto">
-            <Button type="submit" className="mb-2">
+            <Button
+              type="button"
+              className="mb-2"
+               onClick={handleCreate}
+            >
               Submit
             </Button>
           </Col>

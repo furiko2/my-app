@@ -5,10 +5,10 @@ import "./App.css";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 import { ContactList } from "./components/ContactList";
-import { ContactAdd } from "./components/ContactForm";
+import { ContactForm } from "./components/ContactForm";
 import { NavHeader } from "./components/NavHeader";
 
-import { Provider } from "react-redux";
+
 import Table from "react-bootstrap/esm/Table";
 
 export type ContactInterface = {
@@ -64,7 +64,7 @@ function App() {
           </Table>
         </Route>
         <Route path="/addContact">
-          <ContactAdd />
+          <ContactForm />
         </Route>
       </Switch>
     </Router>
