@@ -8,23 +8,47 @@ import FormControl from "react-bootstrap/esm/FormControl";
 import "../App.css";
 import { useAppSelector, useAppDispatch } from "../app/hooks";
 import { RootState } from "../app/store";
-import { createContact } from "../features/contact/contactSlice";
+import {
+  Contact,
+  createContact,
+  removeContact,
+  updateContact,
+} from "../features/contact/contactSlice";
+
+import { useHistory, useParams } from "react-router-dom";
 
 import { nanoid } from "nanoid";
 const countryList = require("country-list");
 
 const allCountries = countryList.getNames();
 
-
+interface id {
+  [key: string]: string;
+}
 export const ContactForm = (props: any) => {
+  const history = useHistory();
+  let idToMatch: id = useParams();
   const getId = () => nanoid();
-  const initialState = {
+
+  const newContact: Contact = {
     id: "",
     firstName: "",
     lastName: "",
     email: "",
     country: "Country",
   };
+
+  const isMatchingId = (contact: any) => {
+    return contact.id === idToMatch["contactID"];
+  };
+
+  const existingContact: Contact | undefined = useAppSelector(
+    (state: RootState) => state.persistedReducer.contacts.find(isMatchingId)
+  );
+
+  const initialState =
+    existingContact !== undefined ? existingContact : newContact;
+  console.log(initialState);
   const [contact, setContact] = useState(initialState);
 
   const dispatch = useAppDispatch();
@@ -47,6 +71,15 @@ export const ContactForm = (props: any) => {
       )
     );
     setContact(initialState);
+  };
+
+  const handleEdit = () => {
+    dispatch(updateContact(contact));
+  };
+
+  const handleDelete = () => {
+    dispatch(removeContact(existingContact!.id));
+    history.push('/');
   };
 
   const getValidity = () => {
@@ -128,9 +161,21 @@ export const ContactForm = (props: any) => {
         </Form.Row>
         <Form.Row>
           <Col xs="auto">
-            <Button type="button" className="mb-2" onClick={handleCreate}>
-              Add Contact
-            </Button>
+            {!existingContact && (
+              <Button type="button" className="mb-2" onClick={handleCreate}>
+                Add Contact
+              </Button>
+            )}
+            {existingContact && (
+              <>
+                <Button type="button" variant="outline-warning" className="mb-2" onClick={handleEdit}>
+                  Edit Ccontact
+                </Button>{' '}
+                <Button type="button" variant="outline-danger" className="mb-2" onClick={handleDelete}>
+                  Delete Contact
+                </Button>
+              </>
+            )}
           </Col>
         </Form.Row>
       </Form>

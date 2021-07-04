@@ -4,11 +4,11 @@ import type { RootState } from "../../app/store";
 // Define a type for the slice state
 
 export interface Contact {
-  id: String;
-  firstName: String;
-  lastName: String;
-  email: String;
-  country: String;
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  country: string;
 }
 
 export interface ContactsAll {
@@ -34,10 +34,9 @@ export const contactSlice = createSlice({
     createContact: {
       reducer: (state, action: PayloadAction<Contact>) => {
         console.log(state.contacts);
-         state.contacts.push(action.payload);
+        state.contacts.push(action.payload);
         // state = [...state, action.payload];
         // state.contacts=[...state.contacts,action.payload]
-
       },
       prepare: (id, firstName, lastName, email, country) => {
         // const id = 2;
@@ -45,15 +44,25 @@ export const contactSlice = createSlice({
       },
     },
 
-    update: () => {},
-    remove: () => {},
+    updateContact: (state, action: PayloadAction<Contact>) => {
+      const { id, firstName, lastName, email, country } = action.payload
+      const contact = state.contacts.find(c => c.id === id)
+      contact!.firstName = firstName;
+      contact!.lastName = lastName;
+      contact!.email = email;
+      contact!.country = country;
+     
+    },
+    removeContact: (state, action: PayloadAction<string>) => {
+      state.contacts = state.contacts.filter(({ id }) => id !== action.payload);
+    },
   },
 });
 
-export const { createContact } = contactSlice.actions;
+export const { createContact, updateContact, removeContact } =
+  contactSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
-// export const selectCountry = (state: RootState) =>
-//   state.persistedReducer.country;
+export const selectContacts = (state: RootState) => state.persistedReducer;
 
 export default contactSlice.reducer;

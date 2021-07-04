@@ -11,7 +11,7 @@ export const NavHeader = (props: Props) => {
       <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="mr-auto">
           <Nav.Link href="/">Contacts</Nav.Link>
-          <Nav.Link href="/contactForm">Add Contact</Nav.Link>
+          <Nav.Link href="/contactForm/newContact">Add Contact</Nav.Link>
         </Nav>
       </Navbar.Collapse>
     </Navbar>

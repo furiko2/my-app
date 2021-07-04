@@ -14,12 +14,13 @@ import { useAppSelector } from "./app/hooks";
 
 import Contact from "./features/contact/contactSlice";
 import ContactsAll from "./features/contact/contactSlice";
+import selectContacts from "./features/contact/contactSlice";
 
 function App() {
   const initialState = useAppSelector(
     (state: RootState) => state.persistedReducer
   );
-  console.log(initialState.contacts);
+
   const [allContacts, setAllContacts] = useState(initialState);
 
   const handleNewContact = () => {
@@ -47,7 +48,7 @@ function App() {
             </tbody>
           </Table>
         </Route>
-        <Route path="/contactForm">
+        <Route path="/contactForm/:contactID">
           <ContactForm />
         </Route>
       </Switch>
