@@ -1,12 +1,26 @@
-import { configureStore } from "@reduxjs/toolkit";
-import  contactSlice from "./../features/contact/contactSlice";
-// ...
+import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
+
+import storage from "redux-persist/lib/storage";
+import { PERSIST, persistReducer } from 'redux-persist'
+//slices
+import contactSlice from "./../features/contact/contactSlice";
+
+const persistConfig = {
+  key: 'root',
+  storage
+};
+const persistedReducer = persistReducer(persistConfig, contactSlice);
 
 export const store = configureStore({
   reducer: {
-    contactSlice,
+    persistedReducer,
   },
-});
+  middleware: getDefaultMiddleware({
+    serializableCheck: {
+        ignoredActions: [PERSIST]
+    }
+  }),
+}); 
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
 export type RootState = ReturnType<typeof store.getState>;

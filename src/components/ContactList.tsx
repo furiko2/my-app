@@ -1,6 +1,5 @@
-import React, { FC, ReactNode } from "react";
-import { ReactElement } from "react";
-import { ContactInterface as Props } from "../App";
+import Contact from "../features/contact/contactSlice";
+import ContactsAll from "../features/contact/contactSlice";
 import { ContactCard } from "./ContactCard";
 
 export const ContactList = ({ contacts }: any) => {

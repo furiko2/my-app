@@ -1,7 +1,3 @@
-import React from "react";
-import Button from "react-bootstrap/esm/Button";
-import Form from "react-bootstrap/esm/Form";
-import FormControl from "react-bootstrap/esm/FormControl";
 import Nav from "react-bootstrap/esm/Nav";
 import Navbar from "react-bootstrap/esm/Navbar";
 
@@ -15,7 +11,7 @@ export const NavHeader = (props: Props) => {
       <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="mr-auto">
           <Nav.Link href="/">Contacts</Nav.Link>
-          <Nav.Link href="/addContact">Add Contact</Nav.Link>
+          <Nav.Link href="/contactForm">Add Contact</Nav.Link>
         </Nav>
       </Navbar.Collapse>
     </Navbar>

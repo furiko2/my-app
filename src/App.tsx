@@ -1,48 +1,31 @@
 import React, { useState } from "react";
-
+//styles
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-
+//Components
 import { ContactList } from "./components/ContactList";
 import { ContactForm } from "./components/ContactForm";
 import { NavHeader } from "./components/NavHeader";
 
-
 import Table from "react-bootstrap/esm/Table";
+import { RootState } from "./app/store";
+import { useAppSelector } from "./app/hooks";
 
-export type ContactInterface = {
-  id: number;
-  firstName: String;
-  lastName: String;
-  email: String;
-  country: String;
-};
+import Contact from "./features/contact/contactSlice";
+import ContactsAll from "./features/contact/contactSlice";
 
 function App() {
-  const initialState = [
-    {
-      id: 1,
-      firstName: "john",
-      lastName: "doe",
-      email: "email.com",
-      country: "DE",
-    },
-    {
-      id: 2,
-      firstName: "kane",
-      lastName: "doe",
-      email: "email.com",
-      country: "SE",
-    },
-  ];
-
+  const initialState = useAppSelector(
+    (state: RootState) => state.persistedReducer
+  );
+  console.log(initialState.contacts);
   const [allContacts, setAllContacts] = useState(initialState);
 
   const handleNewContact = () => {
     return;
   };
-  console.log(allContacts);
+
   return (
     <Router>
       <NavHeader />
@@ -56,14 +39,15 @@ function App() {
                 <th>Last Name</th>
                 <th>Email</th>
                 <th>Country</th>
+                <th>Edit</th>
               </tr>
             </thead>
             <tbody>
-              <ContactList contacts={allContacts} />
+              <ContactList contacts={allContacts.contacts} />
             </tbody>
           </Table>
         </Route>
-        <Route path="/addContact">
+        <Route path="/contactForm">
           <ContactForm />
         </Route>
       </Switch>

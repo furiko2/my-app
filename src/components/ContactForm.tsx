@@ -10,32 +10,44 @@ import { useAppSelector, useAppDispatch } from "../app/hooks";
 import { RootState } from "../app/store";
 import { createContact } from "../features/contact/contactSlice";
 
-interface Props {}
+import { nanoid } from "nanoid";
 const countryList = require("country-list");
 
 const allCountries = countryList.getNames();
 
-export const ContactForm = (props: Props) => {
-  const [contact, setContact] = useState({
-    firstName: "john",
+
+export const ContactForm = (props: any) => {
+  const getId = () => nanoid();
+  const initialState = {
+    id: "",
+    firstName: "",
     lastName: "",
     email: "",
     country: "Country",
-  });
+  };
+  const [contact, setContact] = useState(initialState);
 
-  const {firstName,lastName,email,country} = useAppSelector((state:RootState) => state.contactSlice);
-  
   const dispatch = useAppDispatch();
-
-  const handleChange = () => {
-    return;
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const name = e.target.name;
+    const value = e.target.value;
+    setContact({ ...contact, [name]: value });
   };
 
-const handleCreate = ()=>{
-  
-  dispatch(createContact)
+  const handleCreate = () => {
+    const newId = getId();
 
-}
+    dispatch(
+      createContact(
+        newId,
+        contact.firstName,
+        contact.lastName,
+        contact.email,
+        contact.country
+      )
+    );
+    setContact(initialState);
+  };
 
   const getValidity = () => {
     return contact.firstName !== "john1";
@@ -49,6 +61,7 @@ const handleCreate = ()=>{
               First Name
             </Form.Label>
             <Form.Control
+              name="firstName"
               className="mb-2"
               id="inlineFormInput"
               placeholder="First Name"
@@ -64,10 +77,14 @@ const handleCreate = ()=>{
               Last Name
             </Form.Label>
             <Form.Control
+              name="lastName"
               className="mb-2"
               id="inlineFormInput"
               placeholder="Last Name"
               value={contact.lastName}
+              onChange={(e) =>
+                setContact({ ...contact, lastName: e.target.value })
+              }
             />
           </Col>
         </Form.Row>
@@ -77,6 +94,7 @@ const handleCreate = ()=>{
               Email
             </Form.Label>
             <FormControl
+              name="email"
               id="inlineFormInput"
               placeholder="Email"
               value={contact.email}
@@ -85,7 +103,7 @@ const handleCreate = ()=>{
           </Col>
           <Col xs="auto">
             <Dropdown>
-              <Dropdown.Toggle variant="info" id="dropdown-basic" >
+              <Dropdown.Toggle variant="info" id="dropdown-basic">
                 {contact.country}
               </Dropdown.Toggle>
 
@@ -110,12 +128,8 @@ const handleCreate = ()=>{
         </Form.Row>
         <Form.Row>
           <Col xs="auto">
-            <Button
-              type="button"
-              className="mb-2"
-               onClick={handleCreate}
-            >
-              Submit
+            <Button type="button" className="mb-2" onClick={handleCreate}>
+              Add Contact
             </Button>
           </Col>
         </Form.Row>
