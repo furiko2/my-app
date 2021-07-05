@@ -1,13 +1,19 @@
-import Contact from "../features/contact/contactSlice";
-import ContactsAll from "../features/contact/contactSlice";
+import { Contact, ContactsAll } from "../features/contact/contactSlice";
 import { ContactCard } from "./ContactCard";
 
-export const ContactList = ({ contacts }: any) => {
-  
+export const ContactList = ({
+  contacts,
+}: {
+  contacts: ContactsAll["contacts"];
+}): JSX.Element => {
   const renderContactList = () => {
-    return contacts.map((contact: any) => {
-      return <ContactCard key={contact.id} contact={contact} />;
-    });
+    return (
+      <>
+        {contacts.map((contact: Contact) => {
+          return <ContactCard key={contact.id} contact={contact} />;
+        })}
+      </>
+    );
   };
   return renderContactList();
 };

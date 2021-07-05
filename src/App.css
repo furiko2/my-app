@@ -1,19 +1,29 @@
-.App {
+.contactForm {
   text-align: center;
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  width: 40vh;
 }
 
-.ScrollableMenu {
+.scrollableMenu {
   max-height: 40vh;
   overflow-y: auto;
+}
+
+.dormWidth {
+  max-width: 20em;
+  min-width: 15em;
+}
+.dropdownWidth {
+  max-width: 15em;
+  min-width: 15em;
+  justify-content: center;
+}
+
+.cut-text {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }

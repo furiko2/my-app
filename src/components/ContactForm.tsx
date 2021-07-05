@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { ReactNode, useState } from "react";
 import Button from "react-bootstrap/esm/Button";
 import Col from "react-bootstrap/esm/Col";
 import Dropdown from "react-bootstrap/esm/Dropdown";
 import Form from "react-bootstrap/esm/Form";
 import FormControl from "react-bootstrap/esm/FormControl";
 
+import * as EmailValidator from "email-validator";
 import "../App.css";
 import { useAppSelector, useAppDispatch } from "../app/hooks";
 import { RootState } from "../app/store";
@@ -18,9 +19,11 @@ import {
 import { useHistory, useParams } from "react-router-dom";
 
 import { nanoid } from "nanoid";
+import Container from "react-bootstrap/esm/Container";
+import Row from "react-bootstrap/esm/Row";
 const countryList = require("country-list");
 
-const allCountries = countryList.getNames();
+const allCountries = countryList.getNames().sort();
 
 interface id {
   [key: string]: string;
@@ -35,7 +38,7 @@ export const ContactForm = (props: any) => {
     firstName: "",
     lastName: "",
     email: "",
-    country: "Country",
+    country: "",
   };
 
   const isMatchingId = (contact: any) => {
@@ -48,7 +51,7 @@ export const ContactForm = (props: any) => {
 
   const initialState =
     existingContact !== undefined ? existingContact : newContact;
-  console.log(initialState);
+
   const [contact, setContact] = useState(initialState);
 
   const dispatch = useAppDispatch();
@@ -58,9 +61,27 @@ export const ContactForm = (props: any) => {
     setContact({ ...contact, [name]: value });
   };
 
-  const handleCreate = () => {
-    const newId = getId();
+  const getAllCountriesList = (): ReactNode => {
+    return allCountries.map((country: string) => {
+      return (
+        <Dropdown.Item
+          key={country}
+          onClick={() => {
+            setContact((prevContact) => ({
+              ...prevContact,
+              country,
+            }));
+          }}
+        >
+          {country}
+        </Dropdown.Item>
+      );
+    });
+  };
 
+  const handleCreate = (e: React.MouseEvent<HTMLInputElement>) => {
+    const newId = getId();
+    // e.preventDefault() ;
     dispatch(
       createContact(
         newId,
@@ -75,110 +96,140 @@ export const ContactForm = (props: any) => {
 
   const handleEdit = () => {
     dispatch(updateContact(contact));
+    history.push("/");
   };
 
   const handleDelete = () => {
     dispatch(removeContact(existingContact!.id));
-    history.push('/');
+    history.push("/");
   };
 
-  const getValidity = () => {
-    return contact.firstName !== "john1";
+  const isNotEmpty = (stringToCheck: string) => {
+    return stringToCheck !== "";
   };
+
+  const isValidContactEmail = () => {
+    return EmailValidator.validate(contact.email);
+  };
+
+  const isValidContact = (): boolean => {
+    return (
+      isValidContactEmail() &&
+      isNotEmpty(contact.lastName) &&
+      isNotEmpty(contact.firstName) &&
+      isNotEmpty(contact.country)
+    );
+  };
+
   return (
-    <div>
-      <Form>
-        <Form.Row className="align-items-center">
-          <Col xs="auto">
-            <Form.Label htmlFor="inlineFormInput" srOnly>
-              First Name
-            </Form.Label>
-            <Form.Control
-              name="firstName"
-              className="mb-2"
-              id="inlineFormInput"
-              placeholder="First Name"
-              isInvalid={getValidity()}
-              value={contact.firstName}
-              onChange={(e) =>
-                setContact({ ...contact, firstName: e.target.value })
-              }
-            />
-          </Col>
-          <Col xs="auto">
-            <Form.Label htmlFor="inlineFormInputGroup" srOnly>
-              Last Name
-            </Form.Label>
-            <Form.Control
-              name="lastName"
-              className="mb-2"
-              id="inlineFormInput"
-              placeholder="Last Name"
-              value={contact.lastName}
-              onChange={(e) =>
-                setContact({ ...contact, lastName: e.target.value })
-              }
-            />
-          </Col>
-        </Form.Row>
-        <Form.Row>
-          <Col xs="auto">
-            <Form.Label htmlFor="inlineFormInputGroup" srOnly>
-              Email
-            </Form.Label>
-            <FormControl
-              name="email"
-              id="inlineFormInput"
-              placeholder="Email"
-              value={contact.email}
-              onChange={handleChange}
-            />
-          </Col>
-          <Col xs="auto">
-            <Dropdown>
-              <Dropdown.Toggle variant="info" id="dropdown-basic">
-                {contact.country}
-              </Dropdown.Toggle>
+    <Container>
+      <Row>
+        <Col className="contactForm ">
+          <Form>
+            <Form.Row className="align-items-center">
+              <Col xs="auto">
+                <Form.Label htmlFor="inlineFormInput" srOnly>
+                  First Name
+                </Form.Label>
+                <Form.Control
+                  key="inputFname"
+                  name="firstName"
+                  className="mb-2 mt-2 FormWidth"
+                  id="inlineFormInput"
+                  placeholder="First Name"
+                  isValid={isNotEmpty(contact.firstName)}
+                  value={contact.firstName}
+                  onChange={handleChange}
+                />
+                <Form.Label htmlFor="inlineFormInputGroup" srOnly>
+                  Last Name
+                </Form.Label>
+                <Form.Control
+                  key="inputLname"
+                  name="lastName"
+                  className="mb-2 FormWidth"
+                  id="inlineFormInput"
+                  placeholder="Last Name"
+                  isValid={isNotEmpty(contact.lastName)}
+                  value={contact.lastName}
+                  onChange={handleChange}
+                />
+                <Form.Label htmlFor="inlineFormInputGroup" srOnly>
+                  Email
+                </Form.Label>
+                <FormControl
+                  key="inputEmail"
+                  name="email"
+                  className="FormWidth"
+                  id="inlineFormInput"
+                  placeholder="Email"
+                  value={contact.email}
+                  isValid={isValidContactEmail()}
+                  onChange={handleChange}
+                />
+                <Dropdown>
+                  <Dropdown.Toggle
+                    key="inputCountry"
+                    name="country-name"
+                    variant={
+                      isNotEmpty(contact.country) ? "success" : "secondary"
+                    }
+                    id="dropdown-basic"
+                    className="mt-2 dropdownWidth cut-text "
+                  >
+                    {contact.country ? contact.country : "Country:"}
+                  </Dropdown.Toggle>
+                  <Dropdown.Menu className="scrollableMenu">
+                    {getAllCountriesList()}
+                  </Dropdown.Menu>
+                </Dropdown>
+              </Col>
+              <Col xs="auto"></Col>
+            </Form.Row>
 
-              <Dropdown.Menu className="ScrollableMenu">
-                {allCountries.map((country: any) => {
-                  return (
-                    <Dropdown.Item
-                      onClick={() => {
-                        setContact((prevContact) => ({
-                          ...prevContact,
-                          country: country,
-                        }));
-                      }}
-                    >
-                      {country}
-                    </Dropdown.Item>
-                  );
-                })}
-              </Dropdown.Menu>
-            </Dropdown>
-          </Col>
-        </Form.Row>
-        <Form.Row>
-          <Col xs="auto">
-            {!existingContact && (
-              <Button type="button" className="mb-2" onClick={handleCreate}>
-                Add Contact
-              </Button>
-            )}
-            {existingContact && (
-              <>
-                <Button type="button" variant="outline-warning" className="mb-2" onClick={handleEdit}>
-                  Edit Ccontact
-                </Button>{' '}
-                <Button type="button" variant="outline-danger" className="mb-2" onClick={handleDelete}>
-                  Delete Contact
-                </Button>
-              </>
-            )}
-          </Col>
-        </Form.Row>
-      </Form>
-    </div>
+            <Form.Row>
+              <Col xs="auto">
+                {!existingContact && (
+                  <Button
+                    key="sumbitButton"
+                    type="submit"
+                    className="mb-2 mt-2"
+                    variant="success"
+                    disabled={!isValidContact()}
+                    onClick={handleCreate}
+                  >
+                    Add Contact
+                  </Button>
+                )}
+                {existingContact && (
+                  <Row>
+                    <Col>
+                      <Button
+                        key="editButton"
+                        type="button"
+                        variant="outline-warning"
+                        className="mb-2 mt-2 mr-2 pl-2 pr-2"
+                        onClick={handleEdit}
+                      >
+                        Edit Contact
+                      </Button>
+                      <Button
+                        key="deleteButton"
+                        type="button"
+                        variant="outline-danger"
+                        className="mb-2 mt-2 ml-1 pl-2 pr-2"
+                        onClick={handleDelete}
+                      >
+                        Delete Contact
+                      </Button>
+                    </Col>
+                  </Row>
+                )}
+              </Col>
+            </Form.Row>
+          </Form>
+        </Col>
+      </Row>
+    </Container>
   );
 };

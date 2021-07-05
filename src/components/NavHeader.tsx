@@ -1,12 +1,10 @@
 import Nav from "react-bootstrap/esm/Nav";
 import Navbar from "react-bootstrap/esm/Navbar";
 
-interface Props {}
-
-export const NavHeader = (props: Props) => {
+export const NavHeader = () => {
   return (
     <Navbar bg="light" expand="lg">
-      <Navbar.Brand href="#home">Address Book</Navbar.Brand>
+      <Navbar.Brand href="/">Address Book</Navbar.Brand>
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="mr-auto">

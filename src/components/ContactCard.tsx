@@ -1,36 +1,34 @@
 import Button from "react-bootstrap/esm/Button";
-import Contact from "../features/contact/contactSlice";
-import ContactsAll from "../features/contact/contactSlice";
+import { Contact } from "../features/contact/contactSlice";
+
 import { useHistory } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../app/hooks";
+import { useAppDispatch } from "../app/hooks";
 
 import { removeContact } from "../features/contact/contactSlice";
-import { RootState } from "../app/store";
-export const ContactCard = ({ contact }: any) => {
+
+export const ContactCard = ({ contact }: { contact: Contact }): JSX.Element => {
+  const { id, firstName, lastName, email, country } = contact;
   const history = useHistory();
 
   const dispatch = useAppDispatch();
 
   const handleEdit = () => {
-    history.push(`/contactForm/${contact.id}`);
+    history.push(`/contactForm/${id}`);
+  };
+  const handleDelete = () => {
+    dispatch(removeContact(id));
   };
 
- 
-  const handleDelete = () => {
-    dispatch(removeContact(contact.id));
-   
-  };
-  
   return (
-    <tr key={contact.id}>
-      <td>{contact.firstName}</td>
-      <td>{contact.lastName}</td>
-      <td>{contact.email}</td>
-      <td>{contact.country}</td>
+    <tr key={id}>
+      <td>{firstName}</td>
+      <td>{lastName}</td>
+      <td>{email}</td>
+      <td>{country}</td>
       <td>
-        <Button variant="outline-warning" onClick={handleEdit}>
+        <Button className="mr-2" variant="outline-warning" onClick={handleEdit}>
           Edit
-        </Button>{" "}
+        </Button>
         <Button variant="outline-danger" onClick={handleDelete}>
           Delete
         </Button>

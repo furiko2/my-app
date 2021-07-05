@@ -14,6 +14,7 @@
     "@types/react-redux": "^7.1.16",
     "bootstrap": "^4.6.0",
     "country-list": "^2.2.0",
+    "email-validator": "^2.0.4",
     "nanoid": "^3.1.23",
     "react": "^17.0.2",
     "react-bootstrap": "^1.6.1",
