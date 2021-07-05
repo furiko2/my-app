@@ -28,7 +28,7 @@ const allCountries = countryList.getNames().sort();
 interface id {
   [key: string]: string;
 }
-export const ContactForm = (props: any) => {
+export const ContactForm = () => {
   const history = useHistory();
   let idToMatch: id = useParams();
   const getId = () => nanoid();
@@ -41,7 +41,7 @@ export const ContactForm = (props: any) => {
     country: "",
   };
 
-  const isMatchingId = (contact: any) => {
+  const isMatchingId = (contact: Contact) => {
     return contact.id === idToMatch["contactID"];
   };
 
@@ -81,7 +81,7 @@ export const ContactForm = (props: any) => {
 
   const handleCreate = (e: React.MouseEvent<HTMLInputElement>) => {
     const newId = getId();
-    // e.preventDefault() ;
+
     dispatch(
       createContact(
         newId,
