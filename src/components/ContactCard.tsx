@@ -6,8 +6,11 @@ import { useAppDispatch } from "../app/hooks";
 
 import { removeContact } from "../features/contact/contactSlice";
 
-export const ContactCard = ({ contact }: { contact: Contact }): JSX.Element => {
-  const { id, firstName, lastName, email, country } = contact;
+export const ContactCard = ({
+  contact: { id, firstName, lastName, email, country },
+}: {
+  contact: Contact;
+}): JSX.Element => {
   const history = useHistory();
 
   const dispatch = useAppDispatch();
